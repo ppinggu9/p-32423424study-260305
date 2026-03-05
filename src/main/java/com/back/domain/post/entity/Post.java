@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Post extends BaseEntity {
+
     private String title;
     private String content;
+
 }
