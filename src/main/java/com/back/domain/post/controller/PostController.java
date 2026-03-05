@@ -2,8 +2,11 @@ package com.back.domain.post.controller;
 
 import com.back.domain.post.entity.Post;
 import com.back.domain.post.service.PostService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,26 +20,26 @@ public class PostController {
 
     @GetMapping("/write-form")
     @ResponseBody
-    public String writForm() {
+    public String writeForm() {
 
         return getWriteForm("", "", "", "");
+    }
+    @AllArgsConstructor
+    @Getter
+    public static class PostWriteForm {
+        @NotBlank
+        @Size(min = 2, max = 10)
+        private String title;
+
+        @NotBlank
+        @Size(min = 2, max = 100)
+        private String content;
     }
 
     @PostMapping("/write")
     @ResponseBody
-    public String write(
-        @NotBlank @Size(min=2, max=10) String title,
-        @NotBlank @Size(min=2, max=100) String content
-    ) {
-
-        if(title.isBlank()) return getWriteForm("제목을 입력해주세요.", title, content, "title");
-        if(title.length() < 2) return getWriteForm("제목은 2글자 이상 적어주세요.", title, content, "title");
-        if(title.length() > 10) return getWriteForm("제목은 10글자 이상 넘을 수 없습니다.", title, content, "title");
-        if(content.isBlank()) return getWriteForm("내용을 입력해주세요.", title, content, "content");
-        if(content.length() < 2) return getWriteForm("내용은 2글자 이상 적어주세요.", title, content, "content");
-        if(content.length() > 100) return getWriteForm("내용은 100글자 이상 넘을 수 없습니다.", title, content, "content");
-
-        Post post = postService.write(title, content);
+    public String write(@Valid PostWriteForm form) {
+        Post post = postService.write(form.title, form.content);
 
         return "%d번 글이 작성되었습니다.".formatted(post.getId());
     }
