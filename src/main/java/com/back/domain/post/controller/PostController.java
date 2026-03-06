@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,11 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PostController {
 
     private final PostService postService;
-
-    @GetMapping("/write-form")
-    public String writeForm(@ModelAttribute("form") WriteRequestForm form){
-        return "write";
-    }
 
     @AllArgsConstructor
     @Getter
@@ -40,6 +32,11 @@ public class PostController {
         private String content;
     }
 
+    @GetMapping("/write")
+    public String writeForm(@ModelAttribute("form") WriteRequestForm form) {
+        return "write";
+    }
+
     @PostMapping("/write")
     public String write(@Valid @ModelAttribute("form") WriteRequestForm form, BindingResult bindingResult, Model model) {
 
@@ -50,6 +47,13 @@ public class PostController {
 
         // 템플릿 응답
         model.addAttribute("id", post.getId());
-        return "writeDone";
+        return "redirect:/posts/write"; // GET 요청
+    }
+
+    @GetMapping("/{id}")
+    public String detail(@PathVariable int id, Model model){
+        Post post = postService.findById(id).get();
+        model.addAttribute("post", post);
+        return "detail";
     }
 }

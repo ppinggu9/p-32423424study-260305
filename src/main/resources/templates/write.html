@@ -5,18 +5,8 @@
     <title>Title</title>
 </head>
 <body>
-<form method="post" action="/posts/write" th:object="${form}">
-
-    <ul th:if="${#fields.hasAnyErrors()}" style="color:red">
-        <li th:each="err : ${#fields.allErrors().stream().sorted()}"
-            th:with="errorFieldName = ${err.split('-')[1]},
-                 errorMessage = ${err.split('-')[2]}"
-
-            th:text="${errorMessage}"
-            th:data-error-field="${errorFieldName}"
-        ></li>
-    </ul>
-
+<form method="post" th:object="${form}">
+    <div th:replace="form_errors::formErrorsFragment"></div>
     <div>
         <label for="title">제목</label>
         <div>

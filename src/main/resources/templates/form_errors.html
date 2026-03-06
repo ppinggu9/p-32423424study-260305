@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<th:block th:fragment="formErrorsFragment">
+  <ul th:if="${#fields.hasAnyErrors()}" style="color:red">
+    <li th:each="err : ${#fields.allErrors().stream().sorted()}"
+        th:with="errorFieldName = ${err.split('-')[1]},
+                 errorMessage = ${err.split('-')[2]}"
+
+        th:text="${errorMessage}"
+        th:data-error-field="${errorFieldName}"
+    ></li>
+  </ul>
+
+</th:block>
+
+</body>
+</html>
