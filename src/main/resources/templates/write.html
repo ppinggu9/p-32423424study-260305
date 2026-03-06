@@ -5,19 +5,25 @@
     <title>Title</title>
 </head>
 <body>
-<ul style="color:red" th:utext="${errorMessages}">
-</ul>
 <form method="post" action="/posts/write" th:object="${form}">
+
+    <ul th:if="${#fields.hasAnyErrors()}" style="color:red">
+        <li th:each="err : ${#fields.allErrors().stream().sorted()}"
+            th:text="${err.split('-')[2]}"
+            th:data-error-field="${err.split('-')[1]}"
+        ></li>
+    </ul>
+
     <div>
         <label for="title">제목</label>
         <div>
-            <input type="text" name="title" id="title" placeholder="제목을 입력해주세요." th:value="*{title}" autoFocus>
+            <input type="text" th:field="*{title}" placeholder="제목을 입력해주세요." autoFocus>
         </div>
     </div>
     <div>
         <label for="content">내용</label>
         <div>
-            <textarea name="content" id="content" placeholder="내용을 입력해주세요." th:text="*{content}"></textarea>
+            <textarea th:field="*{content}" placeholder="내용을 입력해주세요."></textarea>
         </div>
     </div>
     <input type="submit" value="작성">

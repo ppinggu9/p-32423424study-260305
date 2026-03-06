@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.stream.Collectors;
-
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/posts")
@@ -26,19 +24,19 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/write-form")
-    public String writeForm(@ModelAttribute("form") WriteRequestForm form) {
+    public String writeForm(@ModelAttribute("form") WriteRequestForm form){
         return "write";
     }
 
     @AllArgsConstructor
     @Getter
     public static class WriteRequestForm {
-        @Size(min = 2, max = 10, message = "3-제목은 2자 이상 10자 이하로 입력해주세요.")
-        @NotBlank(message = "1-제목은 필수입니다.")
+        @Size(min = 2, max = 10, message = "03-title-제목은 2자 이상 10자 이하로 입력해주세요.")
+        @NotBlank(message = "01-title-제목은 필수입니다.")
         private String title;
 
-        @Size(min = 2, max = 100, message = "4-내용은 2자 이상 100자 이하로 입력해주세요.")
-        @NotBlank(message = "2-내용은 필수입니다.")
+        @Size(min = 2, max = 100, message = "04-content-내용은 2자 이상 100자 이하로 입력해주세요.")
+        @NotBlank(message = "02-content-내용은 필수입니다.")
         private String content;
     }
 
@@ -46,21 +44,8 @@ public class PostController {
     public String write(@Valid @ModelAttribute("form") WriteRequestForm form, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
-            String errorMessages = bindingResult.getFieldErrors()
-                    .stream()
-                    .map((fieldError) -> fieldError.getField() + "-" + fieldError.getDefaultMessage())
-                    .map((message) -> {
-                        String[] bits = message.split("-"); // [field, 1, errorMessage]
-                        return "<!-- %s --> <li data-error-field=\"%s\">%s</li>".formatted(bits[1], bits[0], bits[2]);
-                    })
-                    .sorted()
-                    .collect(Collectors.joining("\n"));
-
-            // 템플릿 응답
-            model.addAttribute("errorMessages", errorMessages);
             return "write";
         }
-
         Post post = postService.write(form.title, form.content);
 
         // 템플릿 응답
