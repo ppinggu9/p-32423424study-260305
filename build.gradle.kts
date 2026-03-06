@@ -39,6 +39,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation ("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:4.0.0")
 }
 
 tasks.withType<Test> {

@@ -2,13 +2,17 @@ spring:
   application:
     name: p-24-260305
 
-
   profiles:
     active: dev
 
   output:
     ansi:
       enabled: always
+
+
+  thymeleaf:
+    cache: false
+    prefix: file:src/main/resources/templates/
 
   jpa:
     properties:

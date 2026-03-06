@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<ul style="color:red" th:utext="${errorMessages}">
+</ul>
+<form method="post" action="/posts/write" th:object="${form}">
+    <div>
+        <label for="title">제목</label>
+        <div>
+            <input type="text" name="title" id="title" placeholder="제목을 입력해주세요." th:value="*{title}" autoFocus>
+        </div>
+    </div>
+    <div>
+        <label for="content">내용</label>
+        <div>
+            <textarea name="content" id="content" placeholder="내용을 입력해주세요." th:text="*{content}"></textarea>
+        </div>
+    </div>
+    <input type="submit" value="작성">
+</form>
+
+<script>
+    const li = document.querySelector("ul li");
+    const errorFieldName = li.dataset.errorField;
+
+    if(errorFieldName.length > 0) {
+      const form = document.querySelector("form");
+      form[errorFieldName].focus();
+    }
+</script>
+</body>
+</html>
