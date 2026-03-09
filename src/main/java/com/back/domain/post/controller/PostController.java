@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,7 @@ public class PostController {
     }
 
     @GetMapping("/write")
+    @Transactional(readOnly = true)
     public String writeForm(@ModelAttribute("form") WriteRequestForm form) {
         return "write";
     }
@@ -60,17 +62,23 @@ public class PostController {
     }
 
     @GetMapping("")
+    @Transactional(readOnly = true)
     public String list(Model model) {
         model.addAttribute("posts", postService.findAll());
         return "list";
     }
 
     @GetMapping("/{id}/modify")
-    public String modifyForm(@ModelAttribute("form") WriteRequestForm form) {
+    @Transactional(readOnly = true)
+    public String modifyForm(@PathVariable int id,@ModelAttribute("form") ModifyRequestForm form) {
+        Post post = postService.findById(id).get();
+
+        form.title = post.getTitle();
+        form.content = post.getContent();
         return "modify";
     }
 
-    @PostMapping("/posts/{id}/modify")
+    @PostMapping("/{id}/modify")
     public String modify(@PathVariable int id,
                          @Valid @ModelAttribute("form") ModifyRequestForm form,
                          BindingResult bindingResult) {
@@ -84,6 +92,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
+    @Transactional(readOnly = true)
     public String detail(@PathVariable int id, Model model){
         Post post = postService.findById(id).get();
         model.addAttribute("post", post);
