@@ -32,22 +32,55 @@ public class PostController {
         private String content;
     }
 
+    @AllArgsConstructor
+    @Getter
+    public static class ModifyRequestForm {
+        @NotBlank(message = "01-title-제목을 입력해주세요.")
+        @Size(min = 2, max = 10, message = "02-title-제목은 2글자 이상 10글자 이하로 입력해주세요.")
+        private String title;
+
+        @NotBlank(message = "03-content-내용을 입력해주세요.")
+        @Size(min = 2, max = 100, message = "04-content-내용은 2글자 이상 100글자 이하로 입력해주세요.")
+        private String content;
+    }
+
     @GetMapping("/write")
     public String writeForm(@ModelAttribute("form") WriteRequestForm form) {
         return "write";
     }
 
     @PostMapping("/write")
-    public String write(@Valid @ModelAttribute("form") WriteRequestForm form, BindingResult bindingResult, Model model) {
+    public String write(@Valid @ModelAttribute("form") WriteRequestForm form, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return "write";
         }
         Post post = postService.write(form.title, form.content);
+        return "redirect:/posts/%d".formatted(post.getId()); // GET 요청
+    }
 
-        // 템플릿 응답
-        model.addAttribute("id", post.getId());
-        return "redirect:/posts/write"; // GET 요청
+    @GetMapping("")
+    public String list(Model model) {
+        model.addAttribute("posts", postService.findAll());
+        return "list";
+    }
+
+    @GetMapping("/{id}/modify")
+    public String modifyForm(@ModelAttribute("form") WriteRequestForm form) {
+        return "modify";
+    }
+
+    @PostMapping("/posts/{id}/modify")
+    public String modify(@PathVariable int id,
+                         @Valid @ModelAttribute("form") ModifyRequestForm form,
+                         BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "modify";
+        }
+
+        Post post = postService.modify(id, form.title, form.content);
+        return "redirect:/posts/%d".formatted(post.getId()); // GET요청
     }
 
     @GetMapping("/{id}")
