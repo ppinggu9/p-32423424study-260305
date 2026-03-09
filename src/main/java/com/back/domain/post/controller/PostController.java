@@ -68,9 +68,10 @@ public class PostController {
         return "list";
     }
 
+    // 수정
     @GetMapping("/{id}/modify")
     @Transactional(readOnly = true)
-    public String modifyForm(@PathVariable int id,@ModelAttribute("form") ModifyRequestForm form) {
+    public String modifyForm(@PathVariable int id, @ModelAttribute("form") ModifyRequestForm form) {
         Post post = postService.findById(id).get();
 
         form.title = post.getTitle();
@@ -93,7 +94,7 @@ public class PostController {
 
     @GetMapping("/{id}")
     @Transactional(readOnly = true)
-    public String detail(@PathVariable int id, Model model){
+    public String detail(@PathVariable int id, Model model) {
         Post post = postService.findById(id).get();
         model.addAttribute("post", post);
         return "detail";
