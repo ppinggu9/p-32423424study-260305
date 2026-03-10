@@ -5,8 +5,8 @@
   <title>Title</title>
 </head>
 <body>
-<form method="post" th:object="${form}">
-
+<form method="post" th:action="@{/posts/{id}(id=${post.id})}" th:object="${form}">
+  <input type="hidden" name="_method" value="PUT">
   <div th:replace="form_errors::formErrorsFragment"></div>
   <div>
     <label for="title">제목</label>

@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<form method="post" th:object="${form}">
+<form method="post" th:action th:object="${form}">
     <div th:replace="form_errors::formErrorsFragment"></div>
     <div>
         <label for="title">제목</label>
